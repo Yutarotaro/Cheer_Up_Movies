@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    build: .docker/
+    tty: true
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000"
+    environment:
+     - WATCHPACK_POLLING=true
+    command: sh -c "npm run dev"
+
+  mysql:
+    image: mysql/mysql-server
+    container_name: mysql_container
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf 
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root   #コンテナ内のMySQLを起動する際のパスワードを設定
+      MYSQL_DATABASE: taro # MySQLデータベース名設定
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3306:3306"
